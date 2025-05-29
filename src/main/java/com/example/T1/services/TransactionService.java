@@ -1,6 +1,7 @@
 package com.example.T1.services;
 
 import com.example.T1.annotations.LogDataSourceError;
+import com.example.T1.annotations.Metric;
 import com.example.T1.dto.TransactionDto;
 import com.example.T1.exceptions.AccountNotFoundException;
 import com.example.T1.exceptions.TransactionNotFoundException;
@@ -30,6 +31,7 @@ public class TransactionService {
         this.transactionMapper = transactionMapper;
     }
 
+    @Metric
     @LogDataSourceError
     @Transactional
     public Transaction makeTransactions(Long accountId, TransactionDto transactionDto){

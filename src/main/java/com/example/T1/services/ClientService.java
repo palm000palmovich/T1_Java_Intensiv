@@ -1,17 +1,18 @@
 package com.example.T1.services;
 
 
+import com.example.T1.annotations.Cached;
 import com.example.T1.annotations.LogDataSourceError;
+import com.example.T1.annotations.Metric;
 import com.example.T1.dto.ClientDto;
 import com.example.T1.exceptions.UserNotFoundException;
 import com.example.T1.mappers.ClientMapper;
 import com.example.T1.model.Client;
 import com.example.T1.repository.ClientRepository;
-import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,6 +26,7 @@ public class ClientService {
         this.clientMapper = clientMapper;
     }
 
+    @Metric
     @LogDataSourceError
     public Client createClient(ClientDto clientDto){
         Client clientForSaving = clientMapper.dtoToModel(clientDto);
@@ -33,6 +35,9 @@ public class ClientService {
     }
 
     @LogDataSourceError
+    @Metric
+    //@Cached(cacheName = "clients", key = "#id")
+    @Cacheable(value = "client", key = "#id")
     public Client getClient(Long id){
         logger.info("Fetching client with ID: {}", id);
         return clientRepository.findById(id)
@@ -42,6 +47,7 @@ public class ClientService {
                 });
     }
 
+    @Metric
     @LogDataSourceError
     public Client updateClient(Long id, ClientDto clientDto){
         logger.info("Fetching client with ID: {}", id);

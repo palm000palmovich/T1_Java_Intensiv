@@ -3,13 +3,14 @@ package com.example.T1.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name  = "clients")
-public class Client {
+public class Client implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,7 +22,7 @@ public class Client {
     private String middleName;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL,
-            orphanRemoval = true, fetch = FetchType.LAZY)
+            orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<Account> accounts = new ArrayList<>();
 
