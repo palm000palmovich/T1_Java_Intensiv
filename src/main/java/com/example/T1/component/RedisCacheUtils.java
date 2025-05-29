@@ -7,10 +7,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
 import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Component
 public class RedisCacheUtils {
     private final RedisTemplate<String, Object> redisTemplate;
+    private Logger logger = LoggerFactory.getLogger(RedisCacheUtils.class);
 
     public RedisCacheUtils(RedisTemplate<String, Object> redisTemplate){
         this.redisTemplate = redisTemplate;
@@ -30,7 +33,7 @@ public class RedisCacheUtils {
                 String json = objectMapper.writeValueAsString(value);
                 return objectMapper.readValue(json, type);
             } catch (Exception e) {
-                throw new RuntimeException("Ошибка при десериализации объекта", e);
+                logger.info("Ошибка при десериализации объекта");
             }
         }
         return type.cast(value);

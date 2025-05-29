@@ -1,8 +1,5 @@
 package com.example.T1.annotations;
 
-import org.springframework.aot.hint.annotation.Reflective;
-import org.springframework.core.annotation.AliasFor;
-
 import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)

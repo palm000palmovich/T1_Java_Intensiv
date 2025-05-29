@@ -34,7 +34,7 @@ public class DataSourceErrorLoggingAspect {
             dataSourseErrorLogService.saveErrorToBd(ex, joinPoint.getSignature().toShortString());
             logger.info("Аспект отработал.");
 
-            return null;
+            throw ex;
         }
 
     }

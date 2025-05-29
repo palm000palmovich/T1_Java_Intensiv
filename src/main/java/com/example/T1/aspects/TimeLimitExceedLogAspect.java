@@ -19,7 +19,7 @@ public class TimeLimitExceedLogAspect {
     }
 
     @Around("@annotation(com.example.T1.annotations.Metric)")
-    public Object checkMethodRuningTime(ProceedingJoinPoint joinPoint) throws Throwable{
+    public Object checkMethodRunningTime(ProceedingJoinPoint joinPoint) throws Throwable{
         logger.info("Аспект сканирует метод {}", joinPoint.getSignature().toShortString());
         Long startTime = System.currentTimeMillis();
         try{
