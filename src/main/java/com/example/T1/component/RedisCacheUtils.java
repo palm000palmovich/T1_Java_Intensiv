@@ -20,10 +20,6 @@ public class RedisCacheUtils {
         redisTemplate.opsForValue().set(key, value, timeoutInSeconds, TimeUnit.SECONDS);
     }
 
-    // Получение данных из кэша
-    /*public Object getValue(String key) {
-        return redisTemplate.opsForValue().get(key);
-    }*/
 
     public <T> T getValue(String key, Class<T> type) {
         Object value = redisTemplate.opsForValue().get(key);
