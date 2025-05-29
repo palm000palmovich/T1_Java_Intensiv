@@ -36,8 +36,8 @@ public class ClientService {
 
     @LogDataSourceError
     @Metric
-    //@Cached(cacheName = "clients", key = "#id")
-    @Cacheable(value = "client", key = "#id")
+    //@Cacheable(value = "client", key = "#id")
+    @Cached(cacheName = "clients", key = "#id")
     public Client getClient(Long id){
         logger.info("Fetching client with ID: {}", id);
         return clientRepository.findById(id)

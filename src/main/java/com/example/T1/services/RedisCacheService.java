@@ -2,6 +2,7 @@ package com.example.T1.services;
 
 import com.example.T1.annotations.Cached;
 import com.example.T1.component.RedisCacheUtils;
+import com.example.T1.model.Client;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +29,7 @@ public class RedisCacheService {
     }
 
     public Object checkCaches(ProceedingJoinPoint joinPoint, Cached cached) throws Throwable{
+
         String cachedName = cached.cacheName();
         String keyExpression = cached.key();
 
@@ -40,7 +42,7 @@ public class RedisCacheService {
 
         if (redisCacheUtils.hasKey(fullKey)){
             logger.info("Объект есть в кеше.");
-            return redisCacheUtils.getValue(fullKey);
+            return redisCacheUtils.getValue(fullKey, Client.class);
         }
 
         //Если кеша нет

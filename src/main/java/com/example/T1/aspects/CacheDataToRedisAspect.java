@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Aspect
 @Component
+@Aspect
 public class CacheDataToRedisAspect {
     private Logger logger = LoggerFactory.getLogger(CacheDataToRedisAspect.class);
     private final RedisCacheService redisCacheService;
@@ -21,9 +21,9 @@ public class CacheDataToRedisAspect {
     }
 
 
-    @Around("@annotation(com.example.T1.annotations.Cached)")
-    public Object cachedNotashka(ProceedingJoinPoint joinPoint, Cached cached) throws Throwable{
-        logger.info("Аспект перехватил метод.");
+    @Around("@annotation(cached)")
+    public Object cachedAnnotation(ProceedingJoinPoint joinPoint, Cached cached) throws Throwable{
+        logger.info("Аспект перехватил метод с кешированием");
 
         if (cached == null) {
             logger.error("Аннотация @Cached не найдена!");
