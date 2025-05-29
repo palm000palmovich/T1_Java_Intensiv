@@ -1,6 +1,7 @@
 package com.example.T1.services;
 
 import com.example.T1.annotations.LogDataSourceError;
+import com.example.T1.annotations.Metric;
 import com.example.T1.dto.AccountDto;
 import com.example.T1.exceptions.AccountNotFoundException;
 import com.example.T1.exceptions.UserNotFoundException;
@@ -9,8 +10,7 @@ import com.example.T1.model.Account;
 import com.example.T1.model.Client;
 import com.example.T1.repository.AccountRepository;
 import com.example.T1.repository.ClientRepository;
-import io.swagger.v3.oas.annotations.servers.Server;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +35,7 @@ public class AccountService {
     private final Logger logger = LoggerFactory.getLogger(AccountService.class);
 
     // Создание счета
+    @Metric
     @LogDataSourceError
     public Account createAccount(Long clientId, AccountDto accountDto) {
         Client client = clientRepository.findById(clientId)
@@ -52,6 +53,7 @@ public class AccountService {
 
     // Получение счета по ID
     @LogDataSourceError
+    @Cacheable(value = "accounts", key = "#id")
     public Account getAccountById(Long id) {
         logger.info("Fetching account with ID: {}", id);
 
@@ -65,6 +67,7 @@ public class AccountService {
     }
 
     // Обновление счета
+    @Metric
     @LogDataSourceError
     public Account updateAccount(Long id, AccountDto accountDto) {
         logger.info("Updating account with ID: {}", id);
