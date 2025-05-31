@@ -101,6 +101,13 @@
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
 
+		<!-- Kafka Client -->
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka-clients</artifactId>
+			<version>3.5.0</version>
+		</dependency>
+
 		<!-- Для сериализации объектов (например, JSON) -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
