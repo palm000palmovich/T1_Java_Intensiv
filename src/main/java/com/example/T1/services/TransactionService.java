@@ -1,5 +1,6 @@
 package com.example.T1.services;
 
+import com.example.T1.annotations.Cached;
 import com.example.T1.annotations.LogDataSourceError;
 import com.example.T1.annotations.Metric;
 import com.example.T1.dto.TransactionDto;
@@ -31,9 +32,9 @@ public class TransactionService {
         this.transactionMapper = transactionMapper;
     }
 
-    @Metric
     @LogDataSourceError
     @Transactional
+    @Metric
     public Transaction makeTransactions(Long accountId, TransactionDto transactionDto){
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> {
@@ -57,11 +58,12 @@ public class TransactionService {
     }
 
     @LogDataSourceError
-    public Transaction getTransaction(Long tranId){
-        Transaction transaction = transactionRepository.findById(tranId)
+    @Cached(cacheName = "transactions", key = "#id")
+    public Transaction getTransaction(Long id){
+        Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> {
-                    logger.error("Транзакция с id " + tranId + " не найдена.");
-                    return new TransactionNotFoundException(tranId);
+                    logger.error("Транзакция с id " + id + " не найдена.");
+                    return new TransactionNotFoundException(id);
                 });
 
         return transaction;

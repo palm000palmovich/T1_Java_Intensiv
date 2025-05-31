@@ -1,5 +1,6 @@
 package com.example.T1.services;
 
+import com.example.T1.annotations.Cached;
 import com.example.T1.annotations.LogDataSourceError;
 import com.example.T1.annotations.Metric;
 import com.example.T1.dto.AccountDto;
@@ -10,7 +11,6 @@ import com.example.T1.model.Account;
 import com.example.T1.model.Client;
 import com.example.T1.repository.AccountRepository;
 import com.example.T1.repository.ClientRepository;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +34,8 @@ public class AccountService {
 
     private final Logger logger = LoggerFactory.getLogger(AccountService.class);
 
-    // Создание счета
-    @Metric
     @LogDataSourceError
+    @Metric
     public Account createAccount(Long clientId, AccountDto accountDto) {
         Client client = clientRepository.findById(clientId)
                 .orElseThrow(() -> {
@@ -51,9 +50,9 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
-    // Получение счета по ID
     @LogDataSourceError
-    @Cacheable(value = "accounts", key = "#id")
+    @Cached(cacheName = "accounts", key = "#id")
+    @Metric
     public Account getAccountById(Long id) {
         logger.info("Fetching account with ID: {}", id);
 
@@ -66,9 +65,10 @@ public class AccountService {
         return account;
     }
 
-    // Обновление счета
-    @Metric
+
     @LogDataSourceError
+    @Cached(cacheName = "accounts", key = "#id")
+    @Metric
     public Account updateAccount(Long id, AccountDto accountDto) {
         logger.info("Updating account with ID: {}", id);
 
@@ -84,8 +84,10 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
-    // Удаление счета
+
     @LogDataSourceError
+    @Cached(cacheName = "accounts", key = "#id")
+    @Metric
     public Account deleteAccount(Long id) {
         logger.info("Deleting account with ID: {}", id);
 

@@ -33,13 +33,7 @@ public class TransactionController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Transaction> getTrans(@PathVariable("id") Long id){
-        Transaction transaction = transactionService.getTransaction(id);
-
-        if (transaction == null){
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(transaction);
+    public Transaction getTrans(@PathVariable("id") Long id){
+        return transactionService.getTransaction(id);
     }
 }

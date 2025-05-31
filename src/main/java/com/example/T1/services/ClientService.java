@@ -12,7 +12,6 @@ import com.example.T1.repository.ClientRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,7 +25,6 @@ public class ClientService {
         this.clientMapper = clientMapper;
     }
 
-    @Metric
     @LogDataSourceError
     public Client createClient(ClientDto clientDto){
         Client clientForSaving = clientMapper.dtoToModel(clientDto);
@@ -35,9 +33,8 @@ public class ClientService {
     }
 
     @LogDataSourceError
+    @Cached(cacheName = "clients", key = "#id")
     @Metric
-    //@Cached(cacheName = "clients", key = "#id")
-    @Cacheable(value = "client", key = "#id")
     public Client getClient(Long id){
         logger.info("Fetching client with ID: {}", id);
         return clientRepository.findById(id)
@@ -47,8 +44,9 @@ public class ClientService {
                 });
     }
 
-    @Metric
     @LogDataSourceError
+    @Cached(cacheName = "clients", key = "#id")
+    @Metric
     public Client updateClient(Long id, ClientDto clientDto){
         logger.info("Fetching client with ID: {}", id);
 
@@ -64,7 +62,10 @@ public class ClientService {
         return clientRepository.save(client);
     }
 
+
     @LogDataSourceError
+    @Cached(cacheName = "clients", key = "#id")
+    @Metric
     public Client deleteClient(Long id){
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> {

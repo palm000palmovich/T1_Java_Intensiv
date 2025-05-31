@@ -34,14 +34,8 @@ public class ClientController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Client> findClientById(@PathVariable("id") Long id){
-        Client client = clientService.getClient(id);
-
-        if (client == null){
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(client);
+    public Client findClientById(@PathVariable("id") Long id){
+        return clientService.getClient(id);
     }
 
     @PutMapping(path = "/{id}")
