@@ -1,8 +1,8 @@
 package com.example.T1.model;
 
+import com.example.T1.enums.AccountStatus;
 import com.example.T1.enums.Type;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -20,6 +20,14 @@ public class Account implements Serializable {
     private Type type;
     @Column(name = "balance")
     private Long balance;
+    @Column(name = "accountid", nullable = false)
+    private Long accountId;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private AccountStatus status;
+    @Column(name = "frozen_amount")
+    private Long frozenAmount;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "client_id")
     @JsonBackReference
@@ -29,10 +37,12 @@ public class Account implements Serializable {
     @JsonManagedReference
     private List<Transaction> transactions = new ArrayList<>();
 
-    public Account(Type type, Long balance, Client client) {
+    public Account(Type type, Long balance, Client client, Long accountId, Long frozenAmount) {
         this.type = type;
         this.balance = balance;
         this.client = client;
+        this.accountId = accountId;
+        this.frozenAmount = frozenAmount;
     }
 
     public Account(){}
@@ -71,6 +81,38 @@ public class Account implements Serializable {
         this.balance = balance;
     }
 
+    public Long getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
+    }
+
+    public AccountStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(AccountStatus status) {
+        this.status = status;
+    }
+
+    public Long getFrozenAmount() {
+        return frozenAmount;
+    }
+
+    public void setFrozenAmount(Long frozenAmount) {
+        this.frozenAmount = frozenAmount;
+    }
+
     public Client getClient() {
         return client;
     }
@@ -85,6 +127,9 @@ public class Account implements Serializable {
                 "id=" + id +
                 ", type=" + type +
                 ", balance=" + balance +
+                ", accountId=" + accountId +
+                ", status=" + status +
+                ", frozenAmount=" + frozenAmount +
                 ", client=" + client +
                 ", transactions=" + transactions +
                 '}';

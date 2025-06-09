@@ -20,17 +20,20 @@ public class Client implements Serializable {
     private String lastName;
     @Column(name = "middleName")
     private String middleName;
+    @Column(name = "clientid", nullable = false)
+    private Long clientId;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL,
             orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<Account> accounts = new ArrayList<>();
 
-    public Client(String firstName, String lastName, String middleName, List<Account> accounts) {
+    public Client(String firstName, String lastName, String middleName, List<Account> accounts, Long clientId) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.middleName = middleName;
         this.accounts = accounts;
+        this.clientId = clientId;
     }
 
     public Client(){}
@@ -75,6 +78,14 @@ public class Client implements Serializable {
 
     public void setMiddleName(String middleName) {
         this.middleName = middleName;
+    }
+
+    public Long getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
 
     public List<Account> getAccounts() {

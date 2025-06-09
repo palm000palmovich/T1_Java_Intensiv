@@ -1,5 +1,6 @@
 package com.example.T1.model;
 
+import com.example.T1.enums.TransactionStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
@@ -15,6 +16,11 @@ public class Transaction implements Serializable {
     @Column(name = "value")
     private Long value;
     private LocalDateTime timestamp;
+    @Column(name = "transactionid", nullable = false)
+    private Long transactionId;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private TransactionStatus status;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id", nullable = false)
@@ -49,7 +55,35 @@ public class Transaction implements Serializable {
         return timestamp;
     }
 
+    public Long getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(Long transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    public TransactionStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TransactionStatus status) {
+        this.status = status;
+    }
+
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", value=" + value +
+                ", timestamp=" + timestamp +
+                ", transactionId=" + transactionId +
+                ", status=" + status +
+                ", account=" + account +
+                '}';
     }
 }

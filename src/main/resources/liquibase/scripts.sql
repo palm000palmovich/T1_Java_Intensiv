@@ -7,3 +7,13 @@ CREATE TABLE time_limit_exceed_log (
     difference BIGINT,
     units_of_measurement VARCHAR(50)
 );
+
+--changeset IvanTyapkin:4
+ALTER TABLE account ADD COLUMN accountId bigint;
+ALTER TABLE clients ADD COLUMN clientId bigint;
+ALTER TABLE transaction ADD COLUMN transactionId bigint;
+
+--changeset IvanTyapkin:5
+ALTER TABLE transaction ADD COLUMN status varchar(255);
+ALTER TABLE account ADD COLUMN status varchar(255);
+ALTER TABLE account ADD COLUMN frozen_amount bigint;

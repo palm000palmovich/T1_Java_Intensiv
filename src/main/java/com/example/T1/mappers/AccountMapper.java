@@ -4,7 +4,6 @@ import com.example.T1.dto.AccountDto;
 import com.example.T1.model.Account;
 import org.springframework.stereotype.Component;
 
-import javax.security.auth.login.AccountException;
 
 @Component
 public class AccountMapper {

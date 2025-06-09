@@ -1,10 +1,10 @@
 package com.example.T1.controllers;
 
-import com.example.T1.dto.TransactionDto;
-import com.example.T1.model.Transaction;
-import com.example.T1.services.TransactionService;
+import com.example.T1.dto.TransactionMessage;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,28 +12,26 @@ import org.slf4j.LoggerFactory;
 @RestController
 @RequestMapping(path = "/transaction")
 public class TransactionController {
-    private final TransactionService transactionService;
+    private final KafkaTemplate<String, TransactionMessage> kafkaTemplate;
     private Logger logger = LoggerFactory.getLogger(TransactionController.class);
 
-    public TransactionController(TransactionService transactionService){
-        this.transactionService = transactionService;
+    public TransactionController(KafkaTemplate<String, TransactionMessage> kafkaTemplate){
+        this.kafkaTemplate = kafkaTemplate;
     }
 
-    @PostMapping(path = "/{id}")
-    public ResponseEntity<Transaction> saveTransaction(@PathVariable("id") Long accId,
-                                                       @Valid @RequestBody TransactionDto transactionDto){
-        logger.info("Creating transaction for account {} ", accId);
-        Transaction transaction = transactionService.makeTransactions(accId, transactionDto);
-
-        if (transaction == null){
-            return ResponseEntity.badRequest().build();
+    @PostMapping(path = "/send")
+    public ResponseEntity<String> sendTransaction(@Valid @RequestBody TransactionMessage transactionMessage){
+        logger.info("Получено сообщение: {}", transactionMessage.toString());
+        try{
+            kafkaTemplate.send("t1_demo_transactions",
+                            transactionMessage.getTransactionId().toString(),
+                            transactionMessage);
+            logger.info("Транзакция отправлена: {}", transactionMessage);
+            return ResponseEntity.ok("Транзакция успешно отправлена в Kafka");
+        } catch(RuntimeException ex){
+            logger.error("Ошибка при отправке транзакции", ex);
+            return ResponseEntity.internalServerError()
+                    .body("Ошибка при отправке транзакции: " + ex.getMessage());
         }
-
-        return ResponseEntity.ok(transaction);
-    }
-
-    @GetMapping(path = "/{id}")
-    public Transaction getTrans(@PathVariable("id") Long id){
-        return transactionService.getTransaction(id);
     }
 }
