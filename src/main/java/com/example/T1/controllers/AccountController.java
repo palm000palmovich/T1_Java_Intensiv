@@ -39,14 +39,8 @@ public class AccountController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Account> getAcc(@PathVariable("id") Long id){
-        Account account = accountService.getAccountById(id);
-
-        if (account == null){
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(account);
+    public Account getAcc(@PathVariable("id") Long id){
+        return accountService.getAccountById(id);
     }
 
     @PutMapping(path = "/{id}")
